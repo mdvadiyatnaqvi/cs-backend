@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import Admin from '../../models/Admin.js';
 import jwt from 'jsonwebtoken';
+import authMiddleware from '../../middleware/auth.js';
 
 const router = Router();
 
@@ -43,6 +44,29 @@ router.post('/login', async (req, res) => {
 
   } catch (error) {
     console.error('Login error:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// GET /api/admin/login - Check admin login status
+router.get('/login', authMiddleware, async (req, res) => {
+  try {
+    // Verify admin role
+    if (req.user.role !== 'admin') {
+      return res.status(403).json({ error: 'Admin access required' });
+    }
+
+    // Return success response
+    res.json({
+      success: true,
+      admin: {
+        id: req.user.id,
+        email: req.user.email,
+        role: req.user.role
+      }
+    });
+  } catch (error) {
+    console.error('Admin login check error:', error);
     res.status(500).json({ error: 'Server error' });
   }
 });
