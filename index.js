@@ -11,6 +11,13 @@ app.get("/", (req, res) => {
   res.end(`Service is running...`);
 });
 
+app.get("/health", (req, res) => {
+  res.json({ 
+    status: 'ok', 
+    timestamp: new Date().toISOString()
+  });
+});
+
 const startServer = async () => {
   try {
     await connectDB();
