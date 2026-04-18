@@ -1,6 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
-import connectDB from "./utils/database.js";
+import connectDB from "./src/utils/database.js";
+import healthRouter from "./src/routes/health.js";
 
 dotenv.config({ quiet: true });
 const PORT = process.env.PORT;
@@ -11,12 +12,7 @@ app.get("/", (req, res) => {
   res.end(`Service is running...`);
 });
 
-app.get("/health", (req, res) => {
-  res.json({ 
-    status: 'ok', 
-    timestamp: new Date().toISOString()
-  });
-});
+app.use("/health", healthRouter);
 
 const startServer = async () => {
   try {
