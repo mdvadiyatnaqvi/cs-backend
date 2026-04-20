@@ -14,19 +14,13 @@ router.post('/add-client', async (req, res) => {
       return res.status(400).json({ error: 'Name and email are required' });
     }
 
-    // Check if email already exists
-    const existingClient = await Client.findOne({ email: email.toLowerCase().trim() });
-    if (existingClient) {
-      return res.status(400).json({ error: 'Client with this email already exists' });
-    }
-
     // Generate unique clientId
-    const clientId = `CLIENT_${Date.now().toString().slice(-6)}_${Math.random().toString(36).substr(2, 6).toUpperCase()}`;
+    const clientId = `CLIENT_${Date.now().toString().slice(-6)}`;
 
-    // Check if clientId already exists (rare collision protection)
-    const existingById = await Client.findOne({ clientId });
-    if (existingById) {
-      return res.status(400).json({ error: 'Generated client ID collision, please try again' });
+    // Check if clientId already exists
+    const existingClient = await Client.findOne({ clientId });
+    if (existingClient) {
+      return res.status(400).json({ error: 'Client ID already exists' });
     }
 
     // Create new client
