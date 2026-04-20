@@ -4,6 +4,7 @@ import cors from "cors";
 import connectDB from "./src/utils/database.js";
 import healthRouter from "./src/routes/health.js";
 import adminRouter from "./src/routes/admin/admin.js";
+import clientRouter from "./src/routes/client/client.js";
 
 dotenv.config({ quiet: true });
 const PORT = process.env.PORT;
@@ -28,6 +29,7 @@ app.get("/", (req, res) => {
 
 app.use("/health", healthRouter);
 app.use("/api/admin", adminRouter);
+app.use("/api/clients", clientRouter);
 
 const startServer = async () => {
   try {
