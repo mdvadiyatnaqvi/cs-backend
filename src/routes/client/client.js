@@ -14,6 +14,12 @@ router.post('/add-client', async (req, res) => {
       return res.status(400).json({ error: 'Name and email are required' });
     }
 
+    // Check if email already exists (model unique constraint)
+    const existingEmail = await Client.findOne({ email: email.toLowerCase().trim() });
+    if (existingEmail) {
+      return res.status(400).json({ error: 'Email already registered' });
+    }
+
     // Generate unique clientId
     const clientId = `CLIENT_${Date.now().toString().slice(-6)}`;
 
@@ -61,6 +67,34 @@ router.get('/get-clients', authMiddleware, async (req, res) => {
     });
   } catch (error) {
     console.error('Get clients error:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// GET /api/clients/get-clientId - Get clientId by email
+router.get('/get-clientId', async (req, res) => {
+  try {
+    const { email } = req.query;
+
+    if (!email) {
+      return res.status(400).json({ error: 'Email parameter required' });
+    }
+
+    const client = await Client.findOne({ 
+      email: email.toLowerCase().trim() 
+    }).select('clientId').lean();
+
+    if (!client) {
+      return res.status(404).json({ error: 'Client not found' });
+    }
+
+    res.json({
+      success: true,
+      clientId: client.clientId
+    });
+
+  } catch (error) {
+    console.error('Get clientId error:', error);
     res.status(500).json({ error: 'Server error' });
   }
 });
