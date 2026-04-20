@@ -48,8 +48,8 @@ router.post('/login', async (req, res) => {
   }
 });
 
-// GET /api/admin/login - Check admin login status
-router.get('/login', authMiddleware, async (req, res) => {
+// GET /api/admin/me - Check admin login status
+router.get('/me', authMiddleware, async (req, res) => {
   try {
     // Verify admin role
     if (req.user.role !== 'admin') {
