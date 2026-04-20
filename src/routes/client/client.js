@@ -48,18 +48,17 @@ router.post('/add-client', async (req, res) => {
   }
 });
 
-// GET /api/clients/get-clients - List all clients for admin dashboard
+// GET /api/clients/get-clients - Returns all clients with total count
 router.get('/get-clients', authMiddleware, async (req, res) => {
   try {
-    // Optional: Admin role check (since authMiddleware already verifies token)
+    const totalCount = await Client.countDocuments();
     const clients = await Client.find().select('name email clientId createdAt').lean();
 
     res.json({
       success: true,
-      count: clients.length,
+      count: totalCount,
       clients
     });
-
   } catch (error) {
     console.error('Get clients error:', error);
     res.status(500).json({ error: 'Server error' });
