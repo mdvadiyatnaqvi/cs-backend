@@ -8,12 +8,13 @@ import adminRouter from "./src/routes/admin/admin.js";
 dotenv.config({ quiet: true });
 const PORT = process.env.PORT;
 const FRONTEND_URI = process.env.FRONTEND_URL;
+const LOCAL_FRONTEND_URI = process.env.LOCAL_FRONTEND_URL;
 
 const app = express();
 
 // ✅ CORS configuration
 app.use(cors({
-  origin: [FRONTEND_URI,],
+  origin: [FRONTEND_URI, LOCAL_FRONTEND_URI],
   credentials: true
 }));
 
